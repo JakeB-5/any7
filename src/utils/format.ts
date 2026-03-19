@@ -53,3 +53,31 @@ export function formatStars(stars: number): string {
   if (stars >= 1000) return `${(stars / 1000).toFixed(1)}k`;
   return String(stars);
 }
+
+export function weatherEmoji(desc: string): string {
+  const d = desc.toLowerCase();
+  if (d.includes('sun') || d.includes('clear')) return '\u2600\uFE0F';
+  if (d.includes('cloud') || d.includes('overcast')) return '\u2601\uFE0F';
+  if (d.includes('rain') || d.includes('drizzle')) return '\u{1F327}\uFE0F';
+  if (d.includes('snow')) return '\u{1F328}\uFE0F';
+  if (d.includes('thunder') || d.includes('storm')) return '\u26C8\uFE0F';
+  if (d.includes('fog') || d.includes('mist')) return '\u{1F32B}\uFE0F';
+  return '\u{1F321}\uFE0F';
+}
+
+export function wrapText(text: string, maxWidth: number): string[] {
+  const words = text.split(' ');
+  const lines: string[] = [];
+  let current = '';
+
+  for (const word of words) {
+    if (current.length + word.length + 1 > maxWidth) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = current ? `${current} ${word}` : word;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}

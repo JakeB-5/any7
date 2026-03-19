@@ -4,7 +4,7 @@ import Spinner from 'ink-spinner';
 import chalk from 'chalk';
 import type { DashboardData } from '../types/index.js';
 import { fetchAllData } from '../apis/index.js';
-import { box, truncate, formatStars } from '../utils/format.js';
+import { box, truncate, formatStars, weatherEmoji, wrapText } from '../utils/format.js';
 
 interface DashboardProps {
   location?: string;
@@ -154,32 +154,4 @@ export default function Dashboard({ location = 'Seoul' }: DashboardProps) {
       <Text>{output}</Text>
     </Box>
   );
-}
-
-function weatherEmoji(desc: string): string {
-  const d = desc.toLowerCase();
-  if (d.includes('sun') || d.includes('clear')) return '\u2600\uFE0F';
-  if (d.includes('cloud') || d.includes('overcast')) return '\u2601\uFE0F';
-  if (d.includes('rain') || d.includes('drizzle')) return '\u{1F327}\uFE0F';
-  if (d.includes('snow')) return '\u{1F328}\uFE0F';
-  if (d.includes('thunder') || d.includes('storm')) return '\u26C8\uFE0F';
-  if (d.includes('fog') || d.includes('mist')) return '\u{1F32B}\uFE0F';
-  return '\u{1F321}\uFE0F';
-}
-
-function wrapText(text: string, maxWidth: number): string[] {
-  const words = text.split(' ');
-  const lines: string[] = [];
-  let current = '';
-
-  for (const word of words) {
-    if (current.length + word.length + 1 > maxWidth) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = current ? `${current} ${word}` : word;
-    }
-  }
-  if (current) lines.push(current);
-  return lines;
 }

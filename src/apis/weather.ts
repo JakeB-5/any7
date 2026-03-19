@@ -3,6 +3,11 @@ import type { WeatherData } from '../types/index.js';
 
 const WTTR_URL = 'https://wttr.in';
 
+function safeNumber(val: unknown): number {
+  const n = Number(val);
+  return Number.isNaN(n) ? 0 : n;
+}
+
 export async function fetchWeather(location = 'Seoul'): Promise<WeatherData> {
   const { data: raw } = await axios.get(`${WTTR_URL}/${encodeURIComponent(location)}`, {
     params: { format: 'j1' },
@@ -20,9 +25,9 @@ export async function fetchWeather(location = 'Seoul'): Promise<WeatherData> {
 
   return {
     location: country ? `${locationName}, ${country}` : locationName,
-    temperature: Number(current?.temp_C ?? 0),
+    temperature: safeNumber(current?.temp_C),
     description: current?.weatherDesc?.[0]?.value ?? 'Unknown',
-    humidity: Number(current?.humidity ?? 0),
-    wind: Number(current?.windspeedKmph ?? 0),
+    humidity: safeNumber(current?.humidity),
+    wind: safeNumber(current?.windspeedKmph),
   };
 }
